@@ -1,0 +1,53 @@
+{
+  "name": "ogl-dom-position",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "echo \"This template does not include a test runner by default.\" && exit 0",
+    "lint-scripts": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "depcheck": "depcheck"
+  },
+  "dependencies": {
+    "@malven/gui": "^1.6.0",
+    "detect-gpu": "^5.0.32",
+    "include-media": "^2.0.0",
+    "ogl": "^0.0.117",
+    "reset.css": "^2.0.2",
+    "stats.js": "^0.17.0",
+    "vite-plugin-ejs": "^1.6.4"
+  },
+  "devDependencies": {
+    "@malven/eslint-config": "^2.0.0",
+    "@malven/eslint-config-typescript": "^1.1.0",
+    "@types/ogl": "npm:ogl-types@0.0.97",
+    "@types/stats.js": "^0.17.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vitejs/plugin-legacy": "^4.1.0",
+    "depcheck": "^1.4.3",
+    "eslint": "^8.44.0",
+    "eslint-plugin-react": "^7.32.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "sass": "^1.63.6",
+    "terser": "^5.18.2",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.2",
+    "vite-plugin-glsl": "^1.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint-scripts",
+      "npm run typecheck"
+    ]
+  }
+}

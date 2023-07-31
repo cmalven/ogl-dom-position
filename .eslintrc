@@ -1,0 +1,12 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "@malven",
+    "@malven/typescript"
+  ],
+  "settings": {
+    "react": {
+      "version": "latest"
+    }
+  }
+}

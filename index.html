@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <title>Vite Animation Boilerplate</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+
+    <link rel='stylesheet' href='/src/styles/index.scss'>
+  </head>
+  <body>
+    <!-- Your HTML goes here… -->
+    <div data-app-container></div>
+
+    <!-- Items-->
+    <div class='items'>
+      <% for (let i = 0; i < 6; i++) { %>
+      <a href="" class='item'>
+        <p><%= i %></p>
+      </a>
+      <% } %>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+@import 'reset.css/reset.css';
+@import 'include-media/dist/include-media';
+
+
+// ---------------------------------------------------------------
+// Variables
+// ---------------------------------------------------------------
+
+$breakpoints: (
+  small: 500px,
+  medium: 768px,
+  large: 1024px,
+  xlarge: 1280px,
+  full: 1440px,
+);
+
+
+// ---------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------
+
+html,
+body {
+  min-height: 100vh;
+  background-color: #212322;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+// ---------------------------------------------------------------
+// Objects
+// ---------------------------------------------------------------
+
+// General purposes canvas container - applies to all examples
+
+[data-app-container] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+
+// ---------------------------------------------------------------
+// Items
+// ---------------------------------------------------------------
+
+.items {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-column-gap: 3vw;
+  grid-row-gap: 3vw;
+  margin: 3vw;
+}
+
+.item {
+  color: white;
+  display: block;
+  padding: 20px;
+  font-family: 'Avenir', sans-serif;
+  font-size: 14px;
+  transition: 0.2s;
+  transition-property: box-shadow;
+  text-decoration: underline;
+
+  &:nth-child(1) {
+    grid-column: 1 / span 2;
+  }
+
+  &:nth-child(4) {
+    grid-row: 2 / span 2;
+  }
+
+  &:nth-child(6) {
+    grid-column: 2 / span 2;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px white, 0 9px 50px rgba(purple, 0.8);
+    outline: none;
+  }
+}
+

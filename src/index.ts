@@ -3,13 +3,11 @@ import Example from './modules/Scene';
 
 import type Gui from '@malven/gui';
 import type { TierResult } from 'detect-gpu';
-import type Stats from 'stats.js';
 
 interface App {
   devMode: boolean,
   gui?: Gui,
   gpu?: TierResult,
-  stats?: Stats,
 }
 
 declare global {
@@ -24,7 +22,6 @@ window.APP = {
 
 const enableGpuDetect = true;
 const enableGui = window.APP.devMode;
-const enableStats = window.APP.devMode;
 
 const readyPromises = [];
 
@@ -45,17 +42,6 @@ if (enableGui) {
     window.APP.gui.configureDevice('Midi Fighter Twister');
   }).catch(error => 'An error occurred while loading GUI');
   readyPromises.push(guiPromise);
-}
-
-// Stats
-if (enableStats) {
-  const statsPromise = import('stats.js').then(({ default: Stats }) => {
-    // Add stats
-    window.APP.stats = new Stats();
-    window.APP.stats.showPanel(0);
-    document.body.appendChild(window.APP.stats.dom);
-  }).catch(error => 'An error occurred while loading stats.js');
-  readyPromises.push(statsPromise);
 }
 
 Promise.all(readyPromises).then(() => {

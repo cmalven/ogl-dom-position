@@ -7,7 +7,6 @@ import {
   Plane,
   Orbit,
   OGLRenderingContext,
-  Vec2,
   Vec3,
   Texture, TextureLoader,
 } from 'ogl';
@@ -34,25 +33,17 @@ class Scene {
   gl?: OGLRenderingContext;
   camera?: Camera;
   scene?: Transform;
-  program?: Program;
   controls?: Orbit;
   planes: Mesh[] = [];
   texture?: Texture;
 
   // Dimensions
-  dimensions = new Vec2(0, 0);
   fov = 52;
   aspect = 1;
   cameraZ = 7;
 
   // Uniforms
   uniforms: { [key: string]: { value: number | number[] | boolean | Texture | undefined } } = {};
-
-  // Settings
-  settings = {
-    cameraDistance: 5,
-    bgColor: 0x212322,
-  };
 
   constructor(containerSelector = '[data-app-container]') {
     this.container = document.querySelector(containerSelector);
@@ -62,21 +53,11 @@ class Scene {
   }
 
   init = () => {
-    this.createGui();
     this.createApp();
     this.createItems();
     this.updateUniforms();
     this.resize();
     this.update();
-  };
-
-  createGui = () => {
-    if (!window.APP.gui) return;
-
-    const folder = window.APP.gui.setFolder('Settings');
-    folder.open();
-
-    // window.APP.gui.add(this.settings, 'scalePeriod', 0.5, 20);
   };
 
   createApp = () => {
@@ -112,13 +93,6 @@ class Scene {
 
     // Scene
     this.scene = new Transform();
-
-    // Program
-    this.program = new Program(this.gl, {
-      vertex,
-      fragment,
-      uniforms: this.uniforms,
-    });
   };
 
   createItems = () => {
@@ -129,7 +103,19 @@ class Scene {
 
     // Mesh
     this.items.forEach((item) => {
-      const plane = new Mesh(this.gl, { geometry: planeGeometry, program: this.program });
+      if (!this.gl || !this.scene) return;
+
+      // Program
+      const program = new Program(this.gl, {
+        vertex,
+        fragment,
+        uniforms: Object.assign({}, this.uniforms, {
+          color: { value: [Math.random(), Math.random(), Math.random()] },
+          time: { value: this.time }, 
+        }),
+      });
+
+      const plane = new Mesh(this.gl, { geometry: planeGeometry, program: program });
       plane.position.set(0, 0, 0);
       plane.setParent(this.scene);
       this.planes.push(plane);
@@ -173,14 +159,14 @@ class Scene {
   };
 
   updateUniforms = () => {
-    if (!this.program) return;
-
     this.uniforms = {
       time: { value: this.time },
       textureMap: { value: this.texture },
     };
 
-    this.program.uniforms = this.uniforms;
+    this.planes.forEach((plane) => {
+      plane.program.uniforms = Object.assign({}, plane.program.uniforms, this.uniforms);
+    });
   };
 
   update = () => {

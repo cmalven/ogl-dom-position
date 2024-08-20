@@ -95,7 +95,7 @@ body {
   font-size: 14px;
   transition: 0.2s;
   transition-property: box-shadow;
-  text-decoration: underline;
+  text-decoration: none;
 
   &:nth-child(1) {
     grid-column: 1 / span 2;
@@ -109,7 +109,8 @@ body {
     grid-column: 2 / span 2;
   }
 
-  &:focus {
+  &:focus,
+  &:hover {
     box-shadow: 0 0 0 2px white, 0 9px 50px rgba(purple, 0.8);
     outline: none;
   }

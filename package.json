@@ -16,7 +16,6 @@
     "include-media": "^2.0.0",
     "ogl": "^0.0.117",
     "reset.css": "^2.0.2",
-    "stats.js": "^0.17.0",
     "vite-plugin-ejs": "^1.6.4"
   },
   "devDependencies": {

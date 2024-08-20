@@ -89,6 +89,7 @@ class Scene {
     // Resizing
     const resizeObserver = new ResizeObserver(this.resize);
     resizeObserver.observe(this.container);
+    window.addEventListener('resize', this.resize);
     this.resize();
 
     // Scene

@@ -1,18 +1,35 @@
 precision highp float;
 varying vec2 vUv;
 varying vec3 vNormal;
-uniform sampler2D textureMap;
 uniform vec3 color;
 uniform float time;
+uniform sampler2D textureMap;
+uniform float textureWidth;
+uniform float textureHeight;
+uniform vec2 planeScale;
 
 void main() {
     vec3 normal = normalize(vNormal);
-    vec3 tex = texture2D(textureMap, vUv).rgb;
 
-    vec3 color = tex * color + 0.2;
-    float colorShift = 0.5 + 0.5 * sin(time * 2.5);
-    color += vec3(0.0, 0.0, colorShift);
+    // Calculate the aspect ratios
+    float textureRatio = textureWidth / textureHeight;
+    float planeRatio = planeScale.x / planeScale.y;
 
-    gl_FragColor.rgb = color;
+    // Calculate the scale factor for the UV adjustment
+    vec2 scaleFactor = vec2(1.0);
+    scaleFactor.x = min(1.0, planeRatio / textureRatio);
+    scaleFactor.y = min(1.0, textureRatio / planeRatio);
+
+    // Adjust UV coordinates to maintain aspect ratio and center the texture
+    vec2 adjustedUv = (vUv - 0.5) * scaleFactor + 0.5;
+
+    // Sample the texture using the adjusted UV coordinates
+    vec3 tex = texture2D(textureMap, adjustedUv).rgb;
+
+    // Apply the sampled texture color
+    vec3 finalColor = tex;
+
+    // Output the final color
+    gl_FragColor.rgb = finalColor;
     gl_FragColor.a = 1.0;
 }

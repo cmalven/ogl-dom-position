@@ -35,7 +35,7 @@ class Scene {
   scene?: Transform;
   controls?: Orbit;
   planes: Mesh[] = [];
-  texture?: Texture;
+  textures: Texture[] = [];
 
   // Dimensions
   fov = 52;
@@ -101,6 +101,27 @@ class Scene {
     // Geometry
     const planeGeometry = new Plane(this.gl);
 
+    // Available textures
+    let textures = [
+      'andreas-gucklhorn-mawU2PoJWfU-unsplash.jpg',
+      'bailey-zindel-NRQV-hBF10M-unsplash.jpg',
+      'blake-verdoorn-cssvEZacHvQ-unsplash.jpg',
+      'casey-horner-4rDCa5hBlCs-unsplash.jpg',
+      'chris-lee-70l1tDAI6rM-unsplash.jpg',
+      'clement-m-igX2deuD9lc-unsplash.jpg',
+      'daniel-malikyar-F1leFzugQfM-unsplash.jpg',
+      'daniela-kokina-hOhlYhAiizc-unsplash.jpg',
+      'eberhard-grossgasteiger-BXasVMRGsuo-unsplash.jpg',
+      'henry-be-IicyiaPYGGI-unsplash.jpg',
+      'johannes-andersson-UCd78vfC8vU-unsplash.jpg',
+      'kimon-maritz-zMV7sqlJNow-unsplash.jpg',
+      'mourad-saadi-GyDktTa0Nmw-unsplash.jpg',
+      'ren-ran-bBiuSdck8tU-unsplash.jpg',
+      'samsommer-vddccTqwal8-unsplash.jpg',
+      'shifaaz-shamoon-oR0uERTVyD0-unsplash.jpg',
+    ];
+
+
     // Mesh
     this.items.forEach((item) => {
       if (!this.gl || !this.scene) return;
@@ -119,10 +140,16 @@ class Scene {
       plane.position.set(0, 0, 0);
       plane.setParent(this.scene);
       this.planes.push(plane);
-    });
 
-    // Texture
-    this.texture = TextureLoader.load(this.gl, { src: '/assets/gradient-texture.jpg' });
+      // Texture
+      const textureIdx = Math.floor(Math.random() * textures.length);
+      const textureUrl = textures[textureIdx];
+      const texture = TextureLoader.load(this.gl, { src: `/assets/textures/${textureUrl}` });
+      this.textures.push(texture);
+
+      // Remove the chosen texture from the array
+      textures = textures.filter((_, idx) => idx !== textureIdx);
+    });
   };
 
   updateItems = () => {
@@ -161,11 +188,17 @@ class Scene {
   updateUniforms = () => {
     this.uniforms = {
       time: { value: this.time },
-      textureMap: { value: this.texture },
     };
 
-    this.planes.forEach((plane) => {
-      plane.program.uniforms = Object.assign({}, plane.program.uniforms, this.uniforms);
+    this.planes.forEach((plane, idx) => {
+      const texture = this.textures[idx];
+      const uniforms = {
+        textureMap: { value: texture },
+        textureWidth: { value: texture.width },
+        textureHeight: { value: texture.height },
+        planeScale: { value: [plane.scale[0], plane.scale[1]] },
+      };
+      plane.program.uniforms = Object.assign({}, plane.program.uniforms, Object.assign({}, this.uniforms, uniforms));
     });
   };
 

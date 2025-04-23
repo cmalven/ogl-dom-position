@@ -45,9 +45,9 @@ class Scene {
   // Uniforms
   uniforms: { [key: string]: { value: number | number[] | boolean | Texture | undefined } } = {};
 
-  constructor(containerSelector = '[data-app-container]') {
+  constructor(containerSelector = '[data-scene-container]') {
     this.container = document.querySelector(containerSelector);
-    this.items = document.querySelectorAll('.item');
+    this.items = document.querySelectorAll('[data-scene-item]');
 
     this.init();
   }

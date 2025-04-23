@@ -14,12 +14,12 @@
   </head>
   <body>
     <!-- Your HTML goes here… -->
-    <div data-app-container></div>
+    <div data-scene-container></div>
 
     <!-- Items-->
     <div class='items'>
       <% for (let i = 0; i < 6; i++) { %>
-      <a href="" class='item'>
+      <a href="" class='item' data-scene-item>
         <p><%= i %></p>
       </a>
       <% } %>

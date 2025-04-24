@@ -27,7 +27,6 @@ void main() {
     // Get the texture
     vec3 tex = texture2D(textureMap, adjustedUv).rgb;
 
-
     // Apply the sampled texture color
     vec3 finalColor = tex;
 

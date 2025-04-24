@@ -47,11 +47,14 @@ body {
 
 .container {
   padding: 5vw;
+  position: relative;
+  overflow: hidden;
 
   > canvas {
-    position: fixed;
-    top: 0;
+    pointer-events: none;
+    position: absolute;
     left: 0;
+    top: 0;
 
     &:focus {
       outline: none;

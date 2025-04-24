@@ -45,6 +45,9 @@ class Scene {
   scrollOffset: [number, number] = [0, 0];
   prevScrollY = window.scrollY;
 
+  // Scroll sync fix
+  scrollSyncPadding = 0.25;
+
   // OGL items
   renderer?: Renderer;
   gl?: OGLRenderingContext;
@@ -174,29 +177,28 @@ class Scene {
   };
 
   updateItems = (deltaTime: number) => {
-    // const canvasTop = this.scrollOffset[1];
-    // const canvasBottom = canvasTop + this.resolution[1];
+    const canvasTop = this.scrollOffset[1];
+    const canvasBottom = canvasTop + this.resolution[1];
 
     this.items.forEach((item) => {
       item.mesh.program.uniforms.domXY.value = [item.x, item.y];
+
+      // TODO: Optimize by hiding items that are not visible
+      // item.mesh.visible = item.y < canvasBottom && item.y + item.height > canvasTop;
     });
 
-    // Optimize by hiding items that are not visible
-    // item.mesh.visible = item.y < canvasBottom && item.y + item.height > canvasTop;
   };
 
   resize = () => {
     if (!this.container || !this.renderer || !this.gl || !this.camera || !this.itemEls || !this.planes.length) return;
-    const padding = 0;
-    const width = this.container.offsetWidth;
-    const height = window.outerHeight;
-    this.renderer.setSize(width / this.dpr, height / this.dpr);
-    this.viewportWidth = width;
+
+    this.viewportWidth = this.container.offsetWidth;
     this.viewportHeight = window.innerHeight;
-    this.resolution = [this.viewportWidth, this.viewportHeight];
 
     // Set canvas height
-    const canvasHeight = this.viewportHeight * (1 + padding * 2);
+    const canvasHeight = this.viewportHeight * (1 + this.scrollSyncPadding * 2);
+    this.resolution = [this.viewportWidth, canvasHeight];
+    this.renderer.setSize(this.viewportWidth / this.dpr, canvasHeight / this.dpr);
     this.gl.canvas.style.width = `${this.viewportWidth}px`;
     this.gl.canvas.style.height = `${canvasHeight}px`;
 
@@ -207,7 +209,7 @@ class Scene {
     this.items.forEach((item, idx) => {
       const el = item.el;
       const rect = el.getBoundingClientRect();
-      const plane = this.planes[idx];
+      const plane = item.mesh;
 
       const itemWidth = rect.width;
       const itemHeight = rect.height;
@@ -228,17 +230,25 @@ class Scene {
       resolution: { value: this.resolution },
     };
 
+    this.scrollOffset = [window.scrollX, scrollY - this.viewportHeight * this.scrollSyncPadding];
+
     this.planes.forEach((plane, idx) => {
       const texture = this.textures[idx];
       const uniforms = {
         textureMap: { value: texture },
         textureWidth: { value: texture.width },
         textureHeight: { value: texture.height },
-        scrollOffset: { value: [window.scrollX, scrollY] },
+        scrollOffset: { value: this.scrollOffset },
       };
       plane.program.uniforms = Object.assign({}, plane.program.uniforms, Object.assign({}, this.uniforms, uniforms));
     });
   };
+
+  updateCanvasPosition = () => {
+    if (!this.gl) return;
+    this.gl.canvas.style.transform = `translate(${this.scrollOffset[0]}px, ${this.scrollOffset[1]}px)`;
+  };
+
 
   update = () => {
     window.requestAnimationFrame(this.update);
@@ -260,6 +270,10 @@ class Scene {
     // Update uniforms
     this.updateUniforms(deltaTime, scrollY);
 
+    // Position canvas based on scroll
+    this.updateCanvasPosition();
+
+    // Update items
     this.updateItems(deltaTime);
 
     // Render

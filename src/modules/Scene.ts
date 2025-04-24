@@ -187,12 +187,18 @@ class Scene {
 
   resize = () => {
     if (!this.container || !this.renderer || !this.gl || !this.camera || !this.itemEls || !this.planes.length) return;
+    const padding = 0;
     const width = this.container.offsetWidth;
-    const height = this.container.offsetHeight;
+    const height = window.outerHeight;
+    this.renderer.setSize(width / this.dpr, height / this.dpr);
     this.viewportWidth = width;
+    this.viewportHeight = window.innerHeight;
     this.resolution = [this.viewportWidth, this.viewportHeight];
-    this.viewportHeight = height;
-    this.renderer.setSize(width, height);
+
+    // Set canvas height
+    const canvasHeight = this.viewportHeight * (1 + padding * 2);
+    this.gl.canvas.style.width = `${this.viewportWidth}px`;
+    this.gl.canvas.style.height = `${canvasHeight}px`;
 
     // Set scroll offset
     this.scrollOffset = [window.scrollX, window.scrollY];
@@ -207,7 +213,6 @@ class Scene {
       const itemHeight = rect.height;
       plane.program.uniforms.domWH.value = [itemWidth, itemHeight];
 
-      // Update item
       item.width = itemWidth;
       item.height = itemHeight;
       item.x = rect.left + this.scrollOffset[0];

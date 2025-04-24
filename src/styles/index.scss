@@ -31,9 +31,6 @@ html {
 }
 
 body {
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
   align-items: center;
 }
 
@@ -49,7 +46,7 @@ body {
 // General purposes canvas container - applies to all examples
 
 [data-scene-container] {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -75,16 +72,16 @@ body {
 
 .items {
   position: absolute;
+  padding: 5vw;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   grid-column-gap: 3vw;
   grid-row-gap: 3vw;
-  margin: 3vw;
+  height: 600vh;
 }
 
 .item {
@@ -96,18 +93,6 @@ body {
   transition: 0.2s;
   transition-property: box-shadow;
   text-decoration: none;
-
-  &:nth-child(1) {
-    grid-column: 1 / span 2;
-  }
-
-  &:nth-child(4) {
-    grid-row: 2 / span 2;
-  }
-
-  &:nth-child(6) {
-    grid-column: 2 / span 2;
-  }
 
   &:focus,
   &:hover {

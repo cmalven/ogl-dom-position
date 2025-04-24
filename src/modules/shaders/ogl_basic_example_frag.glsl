@@ -1,19 +1,20 @@
 precision highp float;
 varying vec2 vUv;
-varying vec3 vNormal;
-uniform vec3 color;
+varying float vDist;
 uniform float time;
 uniform sampler2D textureMap;
+uniform vec2 scrollOffset;
+uniform vec2 domWH;
 uniform float textureWidth;
 uniform float textureHeight;
-uniform vec2 planeScale;
 
 void main() {
-    vec3 normal = normalize(vNormal);
+    // Create a copy of uv to modify if needed
+    vec2 modUv = vUv;
 
     // Calculate the aspect ratios
     float textureRatio = textureWidth / textureHeight;
-    float planeRatio = planeScale.x / planeScale.y;
+    float planeRatio = domWH.x / domWH.y;
 
     // Calculate the scale factor for the UV adjustment
     vec2 scaleFactor = vec2(1.0);
@@ -23,8 +24,9 @@ void main() {
     // Adjust UV coordinates to maintain aspect ratio and center the texture
     vec2 adjustedUv = (vUv - 0.5) * scaleFactor + 0.5;
 
-    // Sample the texture using the adjusted UV coordinates
+    // Get the texture
     vec3 tex = texture2D(textureMap, adjustedUv).rgb;
+
 
     // Apply the sampled texture color
     vec3 finalColor = tex;

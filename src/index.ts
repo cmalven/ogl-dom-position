@@ -1,13 +1,10 @@
-import { getGPUTier } from 'detect-gpu';
-import Example from './modules/Scene';
+import Scene from './modules/Scene';
 
 import type Gui from '@malven/gui';
-import type { TierResult } from 'detect-gpu';
 
 interface App {
   devMode: boolean,
   gui?: Gui,
-  gpu?: TierResult,
 }
 
 declare global {
@@ -20,17 +17,9 @@ window.APP = {
   devMode: true,
 };
 
-const enableGpuDetect = true;
 const enableGui = window.APP.devMode;
 
 const readyPromises = [];
-
-// Detect GPU
-if (enableGpuDetect) {
-  readyPromises.push(getGPUTier().then(gpuDetails => {
-    window.APP.gpu = gpuDetails;
-  }));
-}
 
 // GUI
 if (enableGui) {
@@ -46,5 +35,5 @@ if (enableGui) {
 
 Promise.all(readyPromises).then(() => {
   // Initialize custom code…
-  new Example();
+  new Scene();
 });

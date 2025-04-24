@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@malven/gui": "^1.6.0",
-    "detect-gpu": "^5.0.32",
     "include-media": "^2.0.0",
     "ogl": "^0.0.117",
     "reset.css": "^2.0.2",

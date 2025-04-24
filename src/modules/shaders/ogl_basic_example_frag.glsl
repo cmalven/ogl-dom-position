@@ -1,10 +1,9 @@
 precision highp float;
 varying vec2 vUv;
-varying float vDist;
 uniform float time;
-uniform sampler2D textureMap;
 uniform vec2 scrollOffset;
 uniform vec2 domWH;
+uniform sampler2D textureMap;
 uniform float textureWidth;
 uniform float textureHeight;
 

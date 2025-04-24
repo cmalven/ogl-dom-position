@@ -15,7 +15,6 @@ uniform float time;
 varying vec2 vUv;
 varying vec4 vRandom;
 varying vec3 vNormal;
-varying float vDist;
 
 void main() {
     vec2 pixelXY = domXY - scrollOffset + domWH * 0.5;

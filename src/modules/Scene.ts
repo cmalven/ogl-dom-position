@@ -236,8 +236,8 @@ class Scene {
       const texture = this.textures[idx];
       const uniforms = {
         textureMap: { value: texture },
-        textureWidth: { value: texture.width },
-        textureHeight: { value: texture.height },
+        textureWidth: { value: texture.width ?? 0 },
+        textureHeight: { value: texture.height ?? 0 },
         scrollOffset: { value: this.scrollOffset },
       };
       plane.program.uniforms = Object.assign({}, plane.program.uniforms, Object.assign({}, this.uniforms, uniforms));

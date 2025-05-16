@@ -19,7 +19,7 @@ void main() {
     color += noiseBlur(tMap, st, pixel, radius).rgb;
 
     // Add divider lines
-    color -= step(.997, fract(st.x * 5.0));
+    color -= step(.992, fract(st.x * 5.0));
 
     gl_FragColor = vec4(color, 1.0);;
 }

@@ -13,13 +13,13 @@ void main() {
     vec2 pixel = 1.0/uResolution;
     vec2 st = gl_FragCoord.xy * pixel;
     float ix = floor(st.x * 5.0);
-    float radius = max(1.0, ix * 6.0);
+    float radius = max(1.0, ix * 4.0);
 
     // Add blur
     color += noiseBlur(tMap, st, pixel, radius).rgb;
 
     // Add divider lines
-    color -= step(.995, fract(st.x * 7.0));
+    color -= step(.997, fract(st.x * 5.0));
 
-    gl_FragColor = vec4(color, color.r);
+    gl_FragColor = vec4(color, 1.0);;
 }

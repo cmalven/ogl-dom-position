@@ -7,10 +7,12 @@ import {
   Plane,
   Orbit,
   OGLRenderingContext,
+  Post,
   Texture, TextureLoader,
 } from 'ogl';
 import vertex from './shaders/ogl_basic_example_vert.glsl';
 import fragment from './shaders/ogl_basic_example_frag.glsl';
+import fragmentPost from './shaders/ogl_basic_example_frag_post.glsl';
 
 /**
  * Boilerplate module using OGL
@@ -56,6 +58,8 @@ class Scene {
   controls?: Orbit;
   planes: Mesh[] = [];
   textures: Texture[] = [];
+  post?: Post;
+  pass?: any;
 
   // Uniforms
   uniforms: { [key: string]: { value: number | number[] | boolean | Texture | undefined } } = {};
@@ -102,6 +106,19 @@ class Scene {
     const resizeObserver = new ResizeObserver(this.resize);
     resizeObserver.observe(this.container);
     window.addEventListener('resize', this.resize);
+
+    // Post
+    this.post = new Post(this.gl);
+
+    this.resize();
+
+    // Add the past
+    this.pass = this.post.addPass({
+      fragment: fragmentPost,
+      uniforms: {
+        uResolution: this.resolution,
+      },
+    });
 
     // Scene
     this.scene = new Transform();
@@ -205,6 +222,9 @@ class Scene {
     // Set scroll offset
     this.scrollOffset = [window.scrollX, window.scrollY];
 
+    // Resize post
+    this.post?.resize();
+
     // Update item positions
     this.items.forEach((item, idx) => {
       const el = item.el;
@@ -242,6 +262,11 @@ class Scene {
       };
       plane.program.uniforms = Object.assign({}, plane.program.uniforms, Object.assign({}, this.uniforms, uniforms));
     });
+
+    // Update uniforms on pass
+    this.pass.program.uniforms = Object.assign({}, this.pass.program.uniforms, {
+      uResolution: { value: this.resolution },
+    });
   };
 
   updateCanvasPosition = () => {
@@ -277,7 +302,7 @@ class Scene {
     this.updateItems(deltaTime);
 
     // Render
-    this.renderer.render({ scene: this.scene, camera: this.camera });
+    this.post?.render({ scene: this.scene, camera: this.camera });
 
     // Update scroll
     this.prevScrollY = scrollY;
